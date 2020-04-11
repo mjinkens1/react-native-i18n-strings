@@ -10,9 +10,14 @@
 class I18nStrings: NSObject {
 
     @objc
-    func getAllLocales(_ resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
+    func getAvailableLocales(_ resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
         let locales = NSLocale.availableLocaleIdentifiers
-        resolve(locales)
+        // Return JavaScript friendly locales
+        let formattedLocales = locales.map {
+            $0.replacingOccurrences(of: "_", with: "-")
+        }
+        
+        resolve(formattedLocales)
     }
     
     @objc

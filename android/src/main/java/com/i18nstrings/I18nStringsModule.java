@@ -25,13 +25,15 @@ public class I18nStringsModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void getAllLocales(Promise promise) {
+  public void getAvailableLocales(Promise promise) {
     try {
       Locale[] availableLocales = Locale.getAvailableLocales();
       ArrayList<String> locales = new ArrayList<>();
       
       for (Locale locale : availableLocales) {
-        locales.add(locale.toString().replaceAll("_", "-"));
+        // Return JavaScript friendly locales
+        String formattedLocale = locale.toString().replaceAll("_", "-")
+        locales.add(formattedLocale);
       }
 
       promise.resolve(locales);
