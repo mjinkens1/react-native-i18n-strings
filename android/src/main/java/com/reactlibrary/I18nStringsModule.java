@@ -11,34 +11,32 @@ import java.util.Locale;
 
 public class I18nStringsModule extends ReactContextBaseJavaModule {
 
-    private final ReactApplicationContext reactContext;
-    private static final String E_LAYOUT_ERROR = "E_LAYOUT_ERROR";
+  private final ReactApplicationContext reactContext;
+  private static final String E_LAYOUT_ERROR = "E_LAYOUT_ERROR";
 
-    I18nStringsModule(ReactApplicationContext reactContext) {
-        super(reactContext);
-        this.reactContext = reactContext;
+  I18nStringsModule(ReactApplicationContext reactContext) {
+    super(reactContext);
+    this.reactContext = reactContext;
+  }
+
+  @Override
+  public String getName() {
+    return "I18nStrings";
+  }
+
+  @ReactMethod
+  public void getAllLocales(Promise promise) {
+    try {
+      Locale[] availableLocales = Locale.getAvailableLocales();
+      ArrayList<String> locales = new ArrayList<>();
+      
+      for (Locale locale : availableLocales) {
+        locales.add(locale.toString().replaceAll("_", "-"));
+      }
+
+      promise.resolve(locales);
+    } catch (IllegalViewOperationException error) {
+      promise.reject(E_LAYOUT_ERROR, error);
     }
-
-    @Override
-    public String getName() {
-        return "I18nStrings";
-    }
-
-    @ReactMethod
-    public void getAllLocales(Promise promise) {
-        try {
-            Locale[] locales = Locale.getAvailableLocales();
-            ArrayList<String> localCountries = new ArrayList<>();
-            for(Locale locale:locales)
-            {
-                localCountries.add(locale.getDisplayLanguage());
-            }
-
-            String[] languages = localCountries.toArray(new String[localCountries.size()]);
-
-            promise.resolve(languages);
-        } catch(IllegalViewOperationException error) {
-            promise.reject(E_LAYOUT_ERROR, error);
-        }
-    }
+  }
 }
